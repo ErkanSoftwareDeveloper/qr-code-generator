@@ -1,97 +1,99 @@
-import io  # dosya ve bellek işlemleri için
-import sys  # sistem işlemleri için
-import webbrowser  # web tarayıcısını açmak için
-from urllib.parse import urlparse  # URL ayrıştırma için
+# ---------------------
+# --- LIBRARIES ---
+# ---------------------
+import io  # For file and memory operations (input/output streams)
+import sys  # For system-level operations and parameters
+import webbrowser  # To open URLs in the default web browser
+from urllib.parse import urlparse  # To parse and validate URLs
 
-import qrcode  # QR kodu oluşturmak için
-from PIL import Image, ImageTk  # Görüntü işlemleri için
-import tkinter as tk  # GUI oluşturmak için
-from tkinter import ttk, messagebox, filedialog, colorchooser  # Tkinter bileşenleri
+import qrcode  # Library to generate QR codes
+from PIL import Image, ImageTk  # PIL for image manipulation, ImageTk to show images in Tkinter
+import tkinter as tk  # Tkinter GUI library
+from tkinter import ttk, messagebox, filedialog, colorchooser
+# ttk: themed Tkinter widgets
+# messagebox: for popup dialogs like info/error
+# filedialog: for file open/save dialogs
+# colorchooser: for choosing colors (not used here but imported)
 
-# ---------------
-# Pencere olustur
-# ---------------
+# ---------------------
+# --- MAIN WINDOW ---
+# ---------------------
+Desktop = tk.Tk()  # Create main Tkinter window
+Desktop.title("QR Link Generator")  # Set window title
+Desktop.geometry("400x550")  # Set window size (width x height)
 
-Desktop = tk.Tk()  # Ana pencere
-Desktop.title("QR Link Generator")  # Pencere başlığı
-Desktop.geometry("400x550")  # Pencere boyutu
+# ---------------------
+# --- LABEL ---
+# ---------------------
+lbl = ttk.Label(Desktop, text="Give the url to create a QR code")  # Create label widget
+lbl.pack(pady=10)  # Add label to window and give vertical padding
 
-# ---------------
-# label yazi ekleme
-# ---------------
+# ---------------------
+# --- ENTRY BOX ---
+# ---------------------
+entry = ttk.Entry(Desktop, width=40)  # Create entry box for user input
+entry.pack(pady=5)  # Add entry box to window with vertical padding
 
-# Label oluştur
-lbl = ttk.Label(Desktop, text="Give the url to create a QR code")
-lbl.pack(pady=10)  # Label ekle ve üstten boşluk bırak
+# ---------------------
+# --- BUTTON FUNCTIONS ---
+# ---------------------
 
-# ---------------
-# Entry kutusu ekleme
-# ---------------
-
-entry = ttk.Entry(Desktop, width=40)  # Entry kutusu oluştur
-entry.pack(pady=5)  # Entry kutusu ekle ve üstten boşluk bırak
-
-# ---------------
-# Buton ekleme
-# ---------------
-
-
+# Function to save QR code image
 def save_qr():
-    global pil_img  # Görüntü değişkenini global yap
+    global pil_img  # Use global PIL image variable
     try:
-        foulder_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[
-                                                    # Kaydetme diyalog kutusunu aç
-                                                    ("PNG files", "*.png")])
-        if foulder_path and pil_img:
-            pil_img.save(foulder_path)  # Görüntüyü belirtilen yola kaydet
-    except Exception:  # Hata durumunda
-        pass  # Hata durumunda işlem yapma
+        foulder_path = filedialog.asksaveasfilename(
+            defaultextension=".png",  # Default file extension
+            filetypes=[("PNG files", "*.png")]  # Allow only PNG files
+        )
+        if foulder_path and pil_img:  # If a path is selected and image exists
+            pil_img.save(foulder_path)  # Save the image to the specified path
+    except Exception:  # Catch any exception
+        pass  # Do nothing if an error occurs
 
-
+# Function triggered by "Create QR Code" button
 def buton_click():
-    global tk_img, pil_img  # Görüntü değişkenlerini global yap
-    text = entry.get().strip()  # Entry kutusundaki metni al ve boşlukları temizle
+    global tk_img, pil_img  # Make image variables global so they persist
+    text = entry.get().strip()  # Get text from entry box and remove leading/trailing spaces
     if not text:
-        return  # Metin boşsa işlem yapma
+        return  # If text is empty, do nothing
 
-    # QR kod nesnesi oluştur
+    # Create QR code object
     qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M)
-    qr.add_data(text)  # Metni QR koda ekle
-    qr.make(fit=True)  # QR kodu oluştur
-    pil_img = qr.make_image(fill_color="black", back_color="white").convert(
-        "RGB")  # QR kod görüntüsünü oluştur
+    qr.add_data(text)  # Add the input text to QR code
+    qr.make(fit=True)  # Generate QR code
 
-    pil_img = pil_img.resize((300, 300))  # Görüntüyü yeniden boyutlandır
+    pil_img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+    # Convert QR code to RGB PIL image
 
-    # ---------------
-    # Ttkinerda göstermek icin dönüstür
-    # ---------------
+    pil_img = pil_img.resize((300, 300))  # Resize image to 300x300 pixels
 
-    tk_img = ImageTk.PhotoImage(pil_img)  # PIL görüntüsünü Tkinter görünt
-    canvas.delete("all")  # Önceki görüntüyü temizle
-    canvas.create_image(150, 150, image=tk_img)  # canvas ortasina ciz
+    # ---------------------
+    # --- CONVERT TO TKINTER IMAGE ---
+    # ---------------------
+    tk_img = ImageTk.PhotoImage(pil_img)  # Convert PIL image to Tkinter-compatible image
+    canvas.delete("all")  # Clear previous image on canvas
+    canvas.create_image(150, 150, image=tk_img)  # Draw new image at center of canvas
 
-# ---------------
-# Buton oluşturma
-# ---------------
-
-
-btn = ttk.Button(Desktop, text="Create QR Code",
-                 command=buton_click)  # Buton oluştur
-btn.pack(pady=10)  # Buton ekle ve üstten boşluk bırak
+# ---------------------
+# --- BUTTONS ---
+# ---------------------
+btn = ttk.Button(Desktop, text="Create QR Code", command=buton_click)
+# Create button to generate QR code, linked to buton_click function
+btn.pack(pady=10)  # Add button to window with vertical padding
 
 btn_save = ttk.Button(Desktop, text="Save as PNG", command=save_qr)
-btn_save.pack(pady=10)  # Buton ekle ve üstten boşluk bırak
+# Create button to save QR code, linked to save_qr function
+btn_save.pack(pady=10)  # Add button to window with vertical padding
 
+# ---------------------
+# --- CANVAS (PREVIEW) ---
+# ---------------------
+canvas = tk.Canvas(Desktop, width=300, height=300, bg="#eee")  
+# Create canvas to display QR code image, 300x300 size, light gray background
+canvas.pack(pady=20)  # Add canvas to window with vertical padding
 
-# ---------------
-# Canvas ekle (önizleme)
-# ---------------
-
-canvas = tk.Canvas(Desktop, width=300, height=300, bg="#eee")  # Canvas oluştur
-canvas.pack(pady=20)  # Canvas ekle ve üstten boşluk bırak
-
-# ---------------
-# pencereyi calistir
-# ---------------
-Desktop.mainloop()  # Ana döngüyü başlat
+# ---------------------
+# --- RUN MAIN LOOP ---
+# ---------------------
+Desktop.mainloop()  # Start Tkinter event loop to keep the window running
