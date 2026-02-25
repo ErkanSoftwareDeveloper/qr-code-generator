@@ -1,11 +1,11 @@
-# 🔳 QR Code Generator
+#  QR Code Generator
 
 A simple and lightweight **QR code generator desktop application** built with **Python** and **Tkinter**.
 This app allows users to quickly convert URLs or text into QR codes and save them as PNG images.
 
 ---
 
-## ✨ Features
+##  Features
 
 * Generate QR codes from URLs or plain text
 * Live QR code preview
@@ -15,7 +15,7 @@ This app allows users to quickly convert URLs or text into QR codes and save the
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 * **Python 3**
 * **Tkinter** – GUI framework
@@ -24,7 +24,7 @@ This app allows users to quickly convert URLs or text into QR codes and save the
 
 ---
 
-## 📦 Installation
+##  Installation
 
 Clone the repository:
 
@@ -41,7 +41,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Usage
+##  Usage
 
 Run the application:
 
@@ -56,7 +56,7 @@ python QRcode.py
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```text
 qr-code-generator/
@@ -68,14 +68,14 @@ qr-code-generator/
 
 ---
 
-## 📸 Video
+##  Video
 
 ![2026-01-1115-43-05-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/6bab97b3-84e6-4245-8abd-62d1ea0ca686)
 
 
 ---
 
-## 🚀 Possible Improvements
+##  Possible Improvements
 
 * Color customization for QR codes
 * Error handling for invalid URLs
@@ -86,6 +86,6 @@ qr-code-generator/
 
 ---
 
-## 📄 License
+##  License
 
 This project is intended for **educational and personal use**.
